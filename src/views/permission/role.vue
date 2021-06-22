@@ -3,21 +3,32 @@
     <el-button type="primary" @click="handleAddRole">New Role</el-button>
 
     <el-table :data="driverList" style="width: 100%;margin-top:30px;" border>
-      <el-table-column align="center" label="Role Key" width="220">
+      <el-table-column align="center" label="Driver Name" width="220">
         <template slot-scope="scope">
           {{ scope.row.name }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Role Name" width="220">
+      <el-table-column align="center" label="Contact Number" width="220">
         <template slot-scope="scope">
           {{ scope.row.contactNumber }}
         </template>
       </el-table-column>
-      <el-table-column align="header-center" label="Description">
+      <el-table-column align="header-center" label="Driver Status">
+        <template slot-scope="scope">
+          {{ scope.row.driverStatus }}
+        </template>
+      </el-table-column>
+      <el-table-column align="header-center" label="Id Number">
         <template slot-scope="scope">
           {{ scope.row.idNumber }}
         </template>
       </el-table-column>
+        <el-table-column align="header-center" label="Vehicle">
+        <template slot-scope="scope">
+          {{ scope.row.vehicle }}
+        </template>
+      </el-table-column>
+      
       <el-table-column align="center" label="Operations">
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="handleEdit(scope)">Edit</el-button>
@@ -26,11 +37,30 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'Edit Role':'New Role'">
+    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'Edit Driver Details':'New Driver Details'">
       <el-form :model="role" label-width="80px" label-position="left">
         <el-form-item label="Name">
           <el-input v-model="role.name" placeholder="Role Name" />
         </el-form-item>
+        <el-form-item label="contactNumber">
+          <el-input v-model="role.contactNumber" placeholder="Role Name" />
+        </el-form-item>
+        <el-form-item label="driverStatus">
+          <el-input v-model="role.driverStatus" placeholder="Role Name" />
+        </el-form-item>
+        <el-form-item label="idNumber">
+          <el-input v-model="role.idNumber" placeholder="Role Name" />
+        </el-form-item>
+
+        <h3>Vehicle Details </h3>
+        <el-form-item label="vehicle Number">
+          <el-input v-model="role.vehicle.vehicleNumber" placeholder="Role Name" />
+        </el-form-item>
+        <el-form-item label="vehicle brand">
+          <el-input v-model="role.vehicle.brand" placeholder="Role Name" />
+        </el-form-item>
+        
+<!-- 
         <el-form-item label="Desc">
           <el-input
             v-model="role.description"
@@ -39,6 +69,7 @@
             placeholder="Role Description"
           />
         </el-form-item>
+        
         <el-form-item label="Menus">
           <el-tree
             ref="tree"
@@ -50,6 +81,8 @@
             class="permission-tree"
           />
         </el-form-item>
+        -->
+
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="dialogVisible=false">Cancel</el-button>
@@ -62,7 +95,7 @@
 <script>
 import path from 'path'
 import { deepClone } from '@/utils'
-import { getRoutes, getRoles, addRole, deleteRole, updateRole, getDrivers } from '@/api/role'
+import { getRoutes, getRoles, addRole, deleteRole, deleteDriver, updateRole, getDrivers } from '@/api/role'
 
 const defaultRole = {
   key: '',
@@ -186,8 +219,10 @@ export default {
         type: 'warning'
       })
         .then(async() => {
-          await deleteRole(row.key)
-          this.rolesList.splice($index, 1)
+          await deleteDriver(row.id)
+          console.log("Id",row.id)
+          this.driverList.splice($index, 1)
+          console.log("Id","sucess")
           this.$message({
             type: 'success',
             message: 'Delete succed!'

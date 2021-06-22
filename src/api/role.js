@@ -52,3 +52,10 @@ export function deleteRole(id) {
     method: 'delete'
   })
 }
+
+export function deleteDriver(id) {
+  return RequestDelivery({
+    url: `delivery/drivers/${id}`,
+    method: 'delete'
+  })
+}
