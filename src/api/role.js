@@ -40,6 +40,24 @@ export function updateRole(id, data) {
   })
 }
 
+
+
+export function updateDriver(id,data) {
+  return RequestDelivery({
+    url: `delivery/drivers/${id}`,
+    method: 'put',
+    data
+  })
+}
+
+export function addDriver(data) {
+  return RequestDelivery({
+    url: `delivery/drivers/`,
+    method: 'post',
+    data
+  })
+}
+
 export function deleteRole(id) {
   return request({
     url: `/vue-element-admin/role/${id}`,
