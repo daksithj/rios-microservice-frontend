@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 import RequestExternal from '@/utils/RequestExternal'
+import RequestDelivery from '@/utils/RequestDelivery'
 import axios from 'axios'
 
 export function getRoutes() {
@@ -17,7 +18,7 @@ export function getRoles() {
 }
 
 export function getDrivers() {
-  return RequestExternal({
+  return RequestDelivery({
     url: 'delivery/drivers',
     method: 'get'
   })
