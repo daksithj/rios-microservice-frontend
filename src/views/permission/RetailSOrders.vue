@@ -1,37 +1,34 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" @click="handleAddRole">New Role</el-button>
+asldhashda
 
-    <el-table :data="driverList" style="width: 100%;margin-top:30px;" border>
-      <el-table-column align="center" label="Driver Name" width="220">
+
+
+
+    <el-button type="primary" @click="handleAddRole">add new Item</el-button>
+
+    <el-table :data="selectedItems" style="width: 100%;margin-top:30px;" border>
+      <el-table-column align="center" label="Item id" width="220">
         <template slot-scope="scope">
-          {{ scope.row.name }}
+          {{ scope.row.ItemDetials.itemName }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Contact Number" width="220">
+      <el-table-column align="center" label="price" width="220">
         <template slot-scope="scope">
-          {{ scope.row.contactNumber }}
+          {{ scope.row.qty }}
         </template>
       </el-table-column>
-      <el-table-column align="header-center" label="Driver Status">
+      <el-table-column align="header-center" label="quntity">
         <template slot-scope="scope">
           {{ scope.row.driverStatus }}
         </template>
       </el-table-column>
-      <el-table-column align="header-center" label="Id Number">
-        <template slot-scope="scope">
-          {{ scope.row.idNumber }}
-        </template>
-      </el-table-column>
-        <el-table-column align="header-center" label="Vehicle">
-        <template slot-scope="scope">
-          {{ scope.row.vehicle }}
-        </template>
-      </el-table-column>
+    
+       
       
       <el-table-column align="center" label="Operations">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" @click="handleEdit(scope)">Edit</el-button>
+          <!-- <el-button type="primary" size="small" @click="handleEdit(scope)">Edit</el-button> -->
           <el-button type="danger" size="small" @click="handleDelete(scope)">Delete</el-button>
         </template>
       </el-table-column>
@@ -39,39 +36,41 @@
 
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'Edit Driver Details':'New Driver Details'">
       <el-form :model="role" label-width="180px" label-position="left">
-        <el-form-item label="Name">
-          <el-input v-model="role.name" placeholder="Role Name" />
-        </el-form-item>
-        <el-form-item label="contactNumber">
-          <el-input v-model="role.contactNumber" placeholder="Role Name" />
-        </el-form-item>
-        <el-form-item label="driverStatus">
-          <el-input v-model="role.driverStatus" placeholder="Role Name" />
-        </el-form-item>
-        <el-form-item label="idNumber">
-          <el-input v-model="role.idNumber" placeholder="Role Name" />
-        </el-form-item>
+       
 
-        <h3>Vehicle Details {{role.vehicle}} </h3>
+   <!--     <div style="display:inline-block;"> -->
+    <label class="radio-label">Book Type: </label>
+    <el-select v-model="outputItem" style="width:70%;">
+      <el-option
+        v-for="item in itemLis"
+        :key="item.id"
+        :label="item.itemName"
+        :value="item"
+      />
+    </el-select>
 
-        
-        <div v-if="role.vehicle">
-        <el-form-item label="vehicle Number">
-          <el-input v-model="role.vehicle.vehicleNumber" placeholder="Role Name" />
-        </el-form-item>
-        <el-form-item label="vehicle brand">
-          <el-input v-model="role.vehicle.brand" placeholder="Role Name" />
-        </el-form-item>
-        </div>
+    
+    
+   
 
-         <div v-if="!role.vehicle">
-        <el-form-item label="vehicle Number">
-          <el-input v-model="role.vehicleNumber" placeholder="Role Name" />
+
+     <el-form-item label="Item Name">
+          {{outputItem.itemName}}
         </el-form-item>
-        <el-form-item label="vehicle brand">
-          <el-input v-model="role.brand" placeholder="Role Name" />
+        <el-form-item label=" Item Price">
+            {{outputItem.price}}
         </el-form-item>
-        </div>
+        <el-form-item label="Item Qty">
+          {{outputItem.quantity}}
+        </el-form-item>
+    <!--  </div>  -->
+
+   <el-form-item label="Rquesting Qty">
+          <el-input v-model="qty" placeholder="Role Name" />
+        </el-form-item>
+       
+
+       
         
 <!-- 
         <el-form-item label="Desc">
@@ -99,7 +98,7 @@
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="dialogVisible=false">Cancel</el-button>
-        <el-button type="primary" @click="confirmRole">Confirm</el-button>
+        <el-button type="primary" @click="addItemtoCart()">add</el-button>
       </div>
     </el-dialog>
   </div>
@@ -108,7 +107,7 @@
 <script>
 import path from 'path'
 import { deepClone } from '@/utils'
-import { getRoutes, getRoles, addRole, deleteRole, deleteDriver,updateDriver,addDriver, updateRole, getDrivers } from '@/api/role'
+import { getRoutes, getRoles, addRole, deleteRole, deleteDriver,updateDriver,addDriver,getItems, updateRole, getDrivers } from '@/api/role'
 
 const defaultRole = {
   key: '',
@@ -122,8 +121,13 @@ export default {
     return {
       role: Object.assign({}, defaultRole),
       routes: [],
+      qty:"",
+      selectedItems:[],
+      outputItem:"",
       rolesList: [],
       driverList: [],
+      itemLis: [],
+      options: ['xlsx', 'csv', 'txt'],
       dialogVisible: false,
       dialogType: 'new',
       checkStrictly: false,
@@ -142,7 +146,7 @@ export default {
     // Mock: get all routes and roles list from server
     this.getRoutes()
     this.getRoles()
-    this.getDrivers()
+    // this.getItems() 
   },
   methods: {
     async getRoutes() {
@@ -151,13 +155,22 @@ export default {
       this.routes = this.generateRoutes(res.data)
     },
 
-    async getDrivers() {
-      const res = await getDrivers()
-      console.log('Driver Details', res._embedded.driverList)
-      this.driverList = res._embedded.driverList
+
+     async getItems() {
+      const res = await getItems()
+      console.log('Driver Details', res._embedded)
+      this.itemLis = res._embedded.warehouseItemList
+      console.log("Sample",this.itemLis)
+
       // this.serviceRoutes = res.data
       // this.routes = this.generateRoutes(res.data)
     },
+
+    calculateTotalPrice(){
+      
+    },
+
+    
 
     async getRoles() {
       const res = await getRoles()
@@ -206,6 +219,7 @@ export default {
       return data
     },
     handleAddRole() {
+      this.getItems()
       this.role = Object.assign({}, defaultRole)
       if (this.$refs.tree) {
         this.$refs.tree.setCheckedNodes([])
@@ -226,22 +240,23 @@ export default {
       })
     },
     handleDelete({ $index, row }) {
-      this.$confirm('Confirm to remove the driver?', 'Warning', {
-        confirmButtonText: 'Confirm',
-        cancelButtonText: 'Cancel',
-        type: 'warning'
-      })
-        .then(async() => {
-          await deleteDriver(row.id)
-          console.log("Id",row.id)
-          this.driverList.splice($index, 1)
-          console.log("Id","sucess")
-          this.$message({
-            type: 'success',
-            message: 'Delete succed!'
-          })
-        })
-        .catch(err => { console.error(err) })
+      // this.$confirm('Confirm to remove the driver?', 'Warning', {
+      //   confirmButtonText: 'Confirm',
+      //   cancelButtonText: 'Cancel',
+      //   type: 'warning'
+      // })
+      this.selectedItems.splice($index, 1)
+        // .then(async() => {
+        //   await deleteDriver(row.id)
+        //   console.log("Id",row.id)
+        //   this.driverList.splice($index, 1)
+        //   console.log("Id","sucess")
+        //   this.$message({
+        //     type: 'success',
+        //     message: 'Delete succed!'
+        //   })
+        // })
+        // .catch(err => { console.error(err) })
     },
     generateTree(routes, basePath = '/', checkedKeys) {
       const res = []
@@ -260,6 +275,25 @@ export default {
       }
       return res
     },
+     async addItemtoCart(){
+       if(this.outputItem.quantity<this.qty){
+
+         this.$notify({
+        title: 'Success',
+        dangerouslyUseHTMLString: true,
+        message: `
+            <div>Role Key: Quantity is exceeded</div>
+          `,
+        type: 'error'
+      })
+
+
+       }else{
+       this.selectedItems.push({ItemDetials:this.outputItem,qty:this.qty})
+       this.dialogVisible = false
+       }
+
+     },
     async confirmRole() {
       const isEdit = this.dialogType === 'edit'
 
