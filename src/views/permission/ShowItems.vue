@@ -1,63 +1,25 @@
 <template>
   <div class="app-container">
+    <el-button type="primary" @click="handleAddRole">New Role</el-button>
 
-
-<h1>{{deliveryItemStatus }} </h1>
-<h1>{{itemID }} </h1>
-
-  <el-button type="success" v-on:click="confrimOrder">
-        confrim 
-      </el-button>
-    
-    <el-button type="success" v-on:click="cancelOrder">
-        cancel 
-      </el-button>
-<h1>Shop details</h1>
-  <table id="firstTable">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Shop Name</th>
-      <th>contactNumber</th>
-      <th>address</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>{{retailShopItems.id}}</td>
-      <td>{{retailShopItems.shopName}}</td>
-      <td>{{retailShopItems.contactNumber}}</td>
-      <td>{{retailShopItems.address}}</td>
-    </tr>
-  </tbody>
-  </table>
-
-
-   </br>
-    <h1>Item details</h1>
-
-<el-table :data="warehouseOrderDetails.itemList" style="width: 100%;margin-top:30px;" border>
-      <el-table-column align="center" label="Item Name" width="220">
+    <el-table :data="orderList" style="width: 100%;margin-top:30px;" border>
+      <el-table-column align="center" label="Role Key" width="220">
         <template slot-scope="scope">
-          {{ scope.row.warehouseItem.itemName }}
+          {{ scope.row.assignmentStatus }}
         </template>
       </el-table-column>
-     <el-table-column align="center" label="Item Quantity" width="220">
+      <el-table-column align="center" label="Role Key" width="220">
         <template slot-scope="scope">
-          {{ scope.row.warehouseItem.quantity }}
+          {{ scope.row.driver }}
         </template>
       </el-table-column>
-  <el-table-column align="center" label="Item Price" width="220">
+      <el-table-column align="center" label="Operations">
         <template slot-scope="scope">
-          {{ scope.row.warehouseItem.price }}
+          <el-button type="primary" size="small" @click="handleEdit(scope)">Edit</el-button>
+          <el-button type="danger" size="small" @click="handleDelete(scope)">Delete</el-button>
         </template>
       </el-table-column>
     </el-table>
-
-
-
-
-
 
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'Edit Role':'New Role'">
       <el-form :model="role" label-width="80px" label-position="left">
@@ -95,7 +57,7 @@
 <script>
 import path from 'path'
 import { deepClone } from '@/utils'
-import { getRoutes, getRoles, addRole, deleteRole, confrimOrder,getOrders,getDriverItems ,updateRole, getDrivers } from '@/api/role'
+import { getRoutes, getRoles, addRole, deleteRole, getOrders ,updateRole, getDrivers } from '@/api/role'
 
 const defaultRole = {
   key: '',
@@ -112,12 +74,8 @@ export default {
       rolesList: [],
       driverList: [],
       orderList: [],
-      retailShopItems: [],
-      warehouseOrderDetails: [],
       dialogVisible: false,
       dialogType: 'new',
-      itemID : 0,
-      deliveryItemStatus: "",
       checkStrictly: false,
       defaultProps: {
         children: 'children',
@@ -134,19 +92,9 @@ export default {
     // Mock: get all routes and roles list from server
     this.getRoutes()
     this.getRoles()
-    //this.getOrders()
-    this.getDriverItems()
+    this.getOrders()
   },
   methods: {
-
-    async confrimOrder(){
-      const res = await confrimOrder(this.itemID,{id:3})
-    },
-
-    async cancelOrder(){
-      console.log("this is the fucking button cancle click ")
-    },
-
     async getRoutes() {
       const res = await getRoutes()
       this.serviceRoutes = res.data
@@ -161,17 +109,6 @@ export default {
       // this.routes = this.generateRoutes(res.data)
     },
 
-async getDriverItems() {
-      var a = 2
-      const res = await getDriverItems(a)
-      console.log('driver items', res)
-      this.itemID = res.id
-      this.deliveryItemStatus = res.orderStatus
-      this.retailShopItems = res.retailShop
-      this.warehouseOrderDetails = res.warehouseOrder
-      // this.serviceRoutes = res.data
-      // this.routes = this.generateRoutes(res.data)
-    },
     async getRoles() {
       const res = await getRoles()
       this.rolesList = res.data

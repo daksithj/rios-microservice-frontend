@@ -30,6 +30,15 @@ export function getOrders() {
     method: 'get'
   })
 }
+export function confrimOrder(id,data) {
+  return RequestDelivery({
+    url: `delivery/pickUpOrders/${id}`,
+    method: 'put',
+    data
+  })
+}
+
+
 export function addRole(data) {
   return request({
     url: '/vue-element-admin/role',
@@ -46,7 +55,12 @@ export function updateRole(id, data) {
   })
 }
 
-
+export function getDriverItems(id) {
+  return RequestDelivery({
+    url: `delivery/getDeliveryItems/${id}`,
+    method: 'get'
+  })
+}
 
 export function updateDriver(id,data) {
   return RequestDelivery({
