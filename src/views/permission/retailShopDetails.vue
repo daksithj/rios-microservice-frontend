@@ -1,23 +1,24 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" @click="handleAddRole">New Item</el-button>
+    <el-button type="primary" @click="handleAddRole">New Shop</el-button>
 
-    <el-table :data="warehouseItemList" style="width: 100%;margin-top:30px;" border>
-      <el-table-column align="center" label="Item Name" width="220">
+    <el-table :data="retailShopList" style="width: 100%;margin-top:30px;" border>
+      <el-table-column align="center" label="Shop Name" width="220">
         <template slot-scope="scope">
-          {{ scope.row.itemName }}
+          {{ scope.row.shopName }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Quantity" width="220">
+      <el-table-column align="center" label="Contact Number" width="220">
         <template slot-scope="scope">
-          {{ scope.row.quantity }}
+          {{ scope.row.contactNumber }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Price" width="220">
+      <el-table-column align="header-center" label="Address">
         <template slot-scope="scope">
-          {{ scope.row.price }}
+          {{ scope.row.address }}
         </template>
       </el-table-column>
+    
       
       <el-table-column align="center" label="Operations">
         <template slot-scope="scope">
@@ -27,41 +28,18 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'Edit Item Details':'Add New Item'">
+    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'Edit Shop Details':'New Shop Details'">
       <el-form :model="role" label-width="180px" label-position="left">
-        <el-form-item label="Item Name">
-          <el-input v-model="role.itemName" placeholder="Item Name" />
+        <el-form-item label="Name">
+          <el-input v-model="role.shopName" placeholder="Shop Name" />
         </el-form-item>
-        <el-form-item label="Quantity">
-          <el-input v-model="role.quantity" placeholder="Quantity" />
+        <el-form-item label="Contact Number">
+          <el-input v-model="role.contactNumber" placeholder="contactNumber" />
         </el-form-item>
-        <el-form-item label="Price">
-          <el-input v-model="role.price" placeholder="Price" />
-        </el-form-item>
-        
-        
-<!-- 
-        <el-form-item label="Desc">
-          <el-input
-            v-model="role.description"
-            :autosize="{ minRows: 2, maxRows: 4}"
-            type="textarea"
-            placeholder="Role Description"
-          />
+        <el-form-item label="Address">
+          <el-input v-model="role.address" placeholder="Address" />
         </el-form-item>
         
-        <el-form-item label="Menus">
-          <el-tree
-            ref="tree"
-            :check-strictly="checkStrictly"
-            :data="routesData"
-            :props="defaultProps"
-            show-checkbox
-            node-key="path"
-            class="permission-tree"
-          />
-        </el-form-item>
-        -->
 
       </el-form>
       <div style="text-align:right;">
@@ -75,7 +53,7 @@
 <script>
 import path from 'path'
 import { deepClone } from '@/utils'
-import { getRoutes, getRoles, addRole, deleteRole, updateRole, getDrivers, getWarehouseItems, addWarehouseItems, updateWarehouseItems, deleteWarehouseItems } from '@/api/role'
+import {deleteDriver,updateDriver,addDriver, updateRole, getDrivers, getRetailShopDetails, addRetailShopDetails, updateRetailShopDetails, deleteRetailShopDetails } from '@/api/role'
 
 const defaultRole = {
   key: '',
@@ -91,8 +69,7 @@ export default {
       routes: [],
       rolesList: [],
       driverList: [],
-      oderList: [],
-      warehouseItemList: [],
+      retailShopList: [],
       dialogVisible: false,
       dialogType: 'new',
       checkStrictly: false,
@@ -112,7 +89,7 @@ export default {
     this.getRoutes()
     this.getRoles()
     this.getDrivers()
-    this.getWarehouseItems()
+    this.getRetailShopDetails()
   },
   methods: {
     async getRoutes() {
@@ -128,10 +105,11 @@ export default {
       // this.serviceRoutes = res.data
       // this.routes = this.generateRoutes(res.data)
     },
-    async getWarehouseItems() {
-      const res = await getWarehouseItems()
-      console.log('Warehouse Details', res)
-      this.warehouseItemList = res._embedded.warehouseItemList
+
+    async getRetailShopDetails() {
+      const res = await getRetailShopDetails()
+      console.log('Retail Shop Details', res)
+      this.retailShopList = res._embedded.retailShopList
       // this.serviceRoutes = res.data
       // this.routes = this.generateRoutes(res.data)
     },
@@ -209,9 +187,9 @@ export default {
         type: 'warning'
       })
         .then(async() => {
-          await deleteWarehouseItems(row.id)
+          await deleteRetailShopDetails(row.id)
           console.log("Id",row.id)
-          this.warehouseItemList.splice($index, 1)
+          this.retailShopList.splice($index, 1)
           console.log("Id","sucess")
           this.$message({
             type: 'success',
@@ -245,28 +223,29 @@ export default {
 
       if (isEdit) {
         console.log("ssssamm",this.role)
-        await updateWarehouseItems(this.role.id, this.role)
-        for (let index = 0; index < this.warehouseItemList.length; index++) {
-          if (this.warehouseItemList[index].id === this.role.id) {
-            this.warehouseItemList.splice(index, 1, Object.assign({}, this.role))
+        await updateRetailShopDetails(this.role.id, this.role)
+        for (let index = 0; index < this.retailShopList.length; index++) {
+          if (this.retailShopList[index].id === this.role.id) {
+            this.retailShopList.splice(index, 1, Object.assign({}, this.role))
             break
           }
         }
       } else {
         console.log(this.role)
         var dataSent =   {
-              itemName: this.role.itemName,
-              quantity:this.role.quantity,
-              price: this.role.price,
+              shopName: this.role.shopName,
+              // idNumber:this.role.idNumber,
+              contactNumber: this.role.contactNumber,
+              address: this.role.address,
               
             }
 
            
 
-         var dataRes  = await addWarehouseItems(dataSent)
+         var dataRes  = await addRetailShopDetails(dataSent)
         console.log("Response",dataRes)
         // this.role.key = data.key
-        this.warehouseItemList.push(dataRes)
+        this.retailShopList.push(dataRes)
         // this.rolesList.push(this.role)
       }
 

@@ -3,6 +3,7 @@ import RequestExternal from '@/utils/RequestExternal'
 import RequestDelivery from '@/utils/RequestDelivery'
 import axios from 'axios'
 import RequestWarehouse from '@/utils/RequestWarehouse'
+import RequestRetailShop from '@/utils/RequestRetailShop'
 
 export function getRoutes() {
     return request({
@@ -25,11 +26,66 @@ export function getDrivers() {
     })
 }
 
+export function getRetailShopDetails() {
+  return RequestRetailShop({
+      url: 'retailShop/shops',
+      method: 'get'
+  })
+}
+
+export function addRetailShopDetails(data) {
+  console.log("sample",data)
+  return RequestRetailShop({
+    url: `retailShop/shops`,
+    method: 'post',
+    data
+  })
+}
+
+export function updateRetailShopDetails(id,data) {
+  return RequestRetailShop({
+    url: `retailShop/shop/${id}`,
+    method: 'put',
+    data
+  })
+}
+
+export function deleteRetailShopDetails(id) {
+  return RequestRetailShop({
+    url: `retailShop/shop/${id}`,
+    method: 'delete'
+  })
+}
+
 export function getWarehouseItems() {
     return RequestWarehouse({
         url: 'warehouse/items',
         method: 'get'
     })
+}
+
+export function addWarehouseItems(data) {
+  console.log("sample",data)
+  return RequestWarehouse({
+    url: `warehouse/items/`,
+    method: 'post',
+    data
+  })
+}
+
+export function updateWarehouseItems(id,data) {
+  return RequestWarehouse({
+    url: `warehouse/items/${id}`,
+    method: 'put',
+    data
+  })
+}
+
+export function deleteWarehouseItems(id) {
+  return RequestWarehouse({
+    url: `warehouse/items/${id}`,
+    method: 'delete'
+  })
 }
 
 export function getOrders() {
