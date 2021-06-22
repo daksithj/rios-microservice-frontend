@@ -24,6 +24,12 @@ export function getDrivers() {
   })
 }
 
+export function getOrders() {
+  return RequestDelivery({
+    url: 'delivery/orders',
+    method: 'get'
+  })
+}
 export function addRole(data) {
   return request({
     url: '/vue-element-admin/role',
