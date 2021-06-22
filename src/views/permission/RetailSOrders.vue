@@ -1,6 +1,8 @@
 <template>
   <div class="app-container">
 asldhashda
+ {{totalPrice}}
+
 
 
 
@@ -121,6 +123,7 @@ export default {
     return {
       role: Object.assign({}, defaultRole),
       routes: [],
+      totalPrice:[],
       qty:"",
       selectedItems:[],
       outputItem:"",
@@ -167,7 +170,14 @@ export default {
     },
 
     calculateTotalPrice(){
-      
+// ItemDetials:this.outputItem,qty:this.qty
+      let total=0;
+
+     for (let i = 0; i < this.selectedItems; i++) {
+        total+=this.selectedItems[i].ItemDetials.price * this.selectedItems[i].qty
+}
+
+
     },
 
     
