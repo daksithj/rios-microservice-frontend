@@ -41,7 +41,13 @@ export function addRetailShopDetails(data) {
     data
   })
 }
-
+export function confrimOrder(id,data) {
+  return RequestDelivery({
+    url: `delivery/pickUpOrders/${id}`,
+    method: 'put',
+    data
+  })
+}
 export function updateRetailShopDetails(id,data) {
   return RequestRetailShop({
     url: `retailShop/shop/${id}`,
@@ -111,6 +117,12 @@ export function updateRole(id, data) {
 }
 
 
+export function getDriverItems(id) {
+  return RequestDelivery({
+    url: `delivery/getDeliveryItems/${id}`,
+    method: 'get'
+  })
+}
 
 export function updateDriver(id,data) {
   return RequestDelivery({

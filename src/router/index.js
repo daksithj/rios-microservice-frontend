@@ -182,6 +182,15 @@ export const asyncRoutes = [
 
 
         
+      },
+      {
+        path: 'ShowItems',
+        component: () => import('@/views/permission/ShowItems'),
+        name: 'Showitems',
+        meta: {
+          title: 'Show items',
+          roles: ['admin']
+        }
       }
 
 
