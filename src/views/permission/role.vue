@@ -38,7 +38,7 @@
     </el-table>
 
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'Edit Driver Details':'New Driver Details'">
-      <el-form :model="role" label-width="80px" label-position="left">
+      <el-form :model="role" label-width="180px" label-position="left">
         <el-form-item label="Name">
           <el-input v-model="role.name" placeholder="Role Name" />
         </el-form-item>
@@ -52,13 +52,26 @@
           <el-input v-model="role.idNumber" placeholder="Role Name" />
         </el-form-item>
 
-        <h3>Vehicle Details </h3>
+        <h3>Vehicle Details {{role.vehicle}} </h3>
+
+        
+        <div v-if="role.vehicle">
         <el-form-item label="vehicle Number">
           <el-input v-model="role.vehicle.vehicleNumber" placeholder="Role Name" />
         </el-form-item>
         <el-form-item label="vehicle brand">
           <el-input v-model="role.vehicle.brand" placeholder="Role Name" />
         </el-form-item>
+        </div>
+
+         <div v-if="!role.vehicle">
+        <el-form-item label="vehicle Number">
+          <el-input v-model="role.vehicleNumber" placeholder="Role Name" />
+        </el-form-item>
+        <el-form-item label="vehicle brand">
+          <el-input v-model="role.brand" placeholder="Role Name" />
+        </el-form-item>
+        </div>
         
 <!-- 
         <el-form-item label="Desc">
@@ -95,7 +108,7 @@
 <script>
 import path from 'path'
 import { deepClone } from '@/utils'
-import { getRoutes, getRoles, addRole, deleteRole, deleteDriver, updateRole, getDrivers } from '@/api/role'
+import { getRoutes, getRoles, addRole, deleteRole, deleteDriver,updateDriver,addDriver, updateRole, getDrivers } from '@/api/role'
 
 const defaultRole = {
   key: '',
@@ -250,21 +263,39 @@ export default {
     async confirmRole() {
       const isEdit = this.dialogType === 'edit'
 
-      const checkedKeys = this.$refs.tree.getCheckedKeys()
-      this.role.routes = this.generateTree(deepClone(this.serviceRoutes), '/', checkedKeys)
+      // const checkedKeys = this.$refs.tree.getCheckedKeys()
+      // this.role.routes = this.generateTree(deepClone(this.serviceRoutes), '/', checkedKeys)
 
       if (isEdit) {
-        await updateRole(this.role.key, this.role)
-        for (let index = 0; index < this.rolesList.length; index++) {
-          if (this.rolesList[index].key === this.role.key) {
-            this.rolesList.splice(index, 1, Object.assign({}, this.role))
+        console.log("ssssamm",this.role)
+        await updateDriver(this.role.id, this.role)
+        for (let index = 0; index < this.driverList.length; index++) {
+          if (this.driverList[index].id === this.role.id) {
+            this.driverList.splice(index, 1, Object.assign({}, this.role))
             break
           }
         }
       } else {
-        const { data } = await addRole(this.role)
-        this.role.key = data.key
-        this.rolesList.push(this.role)
+        console.log(this.role)
+        var dataSent =   {
+              name: this.role.name,
+              idNumber:this.role.idNumber,
+              contactNumber: this.role.contactNumber,
+              driverStatus: this.role.driverStatus,
+              vehicle: {
+          
+                  vehicleNumber: this.role.vehicleNumber,
+                  brand: this.role.brand
+              }
+            }
+
+           
+
+         var dataRes  = await addDriver(dataSent)
+        console.log("Response",dataRes)
+        // this.role.key = data.key
+        this.driverList.push(dataRes)
+        // this.rolesList.push(this.role)
       }
 
       const { description, key, name } = this.role
