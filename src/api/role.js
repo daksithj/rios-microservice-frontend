@@ -32,6 +32,12 @@ export function getWarehouseItems() {
     })
 }
 
+export function getOrders() {
+  return RequestDelivery({
+    url: 'delivery/orders',
+    method: 'get'
+  })
+}
 export function addRole(data) {
     return request({
         url: '/vue-element-admin/role',
@@ -48,9 +54,34 @@ export function updateRole(id, data) {
     })
 }
 
+
+
+export function updateDriver(id,data) {
+  return RequestDelivery({
+    url: `delivery/drivers/${id}`,
+    method: 'put',
+    data
+  })
+}
+
+export function addDriver(data) {
+  return RequestDelivery({
+    url: `delivery/drivers/`,
+    method: 'post',
+    data
+  })
+}
+
 export function deleteRole(id) {
-    return request({
-        url: `/vue-element-admin/role/${id}`,
-        method: 'delete'
-    })
+  return request({
+    url: `/vue-element-admin/role/${id}`,
+    method: 'delete'
+  })
+}
+
+export function deleteDriver(id) {
+  return RequestDelivery({
+    url: `delivery/drivers/${id}`,
+    method: 'delete'
+  })
 }
