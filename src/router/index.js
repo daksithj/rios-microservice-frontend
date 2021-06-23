@@ -199,6 +199,15 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'viewOrderDetails',
+        component: () => import('@/views/permission/viewOrderDetails'),
+        name: 'viewOrderDetails',
+        meta: {
+          title: 'viewOrderDetails',
+          roles: ['admin']
+        }
+      },
+      {
         path: 'assignOrders',
         component: () => import('@/views/permission/assignOrders'),
         name: 'assignOrders',

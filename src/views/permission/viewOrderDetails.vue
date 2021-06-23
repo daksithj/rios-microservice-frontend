@@ -1,85 +1,78 @@
 <template>
   <div class="app-container">
-asldhashda
- {{totalPrice}}
-
-
-
-
-
-    <el-button type="primary" @click="handleAddRole">add new Item</el-button>
-
-    <el-table :data="selectedItems" style="width: 100%;margin-top:30px;" border>
-      <el-table-column align="center" label="Item id" width="220">
-        <template slot-scope="scope">
-          {{ scope.row.ItemDetials.itemName }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="price" width="220">
-        <template slot-scope="scope">
-          {{ scope.row.qty }}
-        </template>
-      </el-table-column>
-      <el-table-column align="header-center" label="quntity">
-        <template slot-scope="scope">
-          {{ scope.row.driverStatus }}
-        </template>
-      </el-table-column>
     
-       
+
+    <el-table :data="allOrders" style="width: 100%;margin-top:30px;" border>
+      <el-table-column align="center" label="Order Id" width="220">
+        <template slot-scope="scope">
+          {{ scope.row.warehouseOrder.id }}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="Order Items" width="220">
+        <template slot-scope="scope">
+         {{ scope.row.warehouseOrder.itemList }}
+        </template>
+      </el-table-column>
+      <el-table-column align="header-center" label="Delivery Status">
+        <template slot-scope="scope">
+        
+         <h1 v-if="scope.row.warehouseOrder.status == 0"> Package is processing</h1>
+          <h1 v-else>Passes to delivery</h1>
+
+        </template>
+      </el-table-column>
+      <el-table-column align="header-center" label="Driver Details">
+        <template slot-scope="scope">
+       {{ scope.row.warehouseOrder.assignOrder }}
+        </template>
+      </el-table-column>
       
+  <!--    
       <el-table-column align="center" label="Operations">
         <template slot-scope="scope">
-          <!-- <el-button type="primary" size="small" @click="handleEdit(scope)">Edit</el-button> -->
+          <el-button type="primary" size="small" @click="handleEdit(scope)">Edit</el-button>
           <el-button type="danger" size="small" @click="handleDelete(scope)">Delete</el-button>
         </template>
       </el-table-column>
     </el-table>
-
-
-          <!-- <el-button type="primary" size="small" @click="handleEdit(scope)">Edit</el-button> -->
-          <br>
-          <el-button type="success" size="small" @click="placeTheOrder()">Place the order</el-button>
-          <el-button type="danger" size="small" @click="cancelTheOrder()">Cancel the order</el-button>
-
+    -->
+      </el-table>
 
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'Edit Driver Details':'New Driver Details'">
       <el-form :model="role" label-width="180px" label-position="left">
-       
-
-   <!--     <div style="display:inline-block;"> -->
-    <label class="radio-label">Book Type: </label>
-    <el-select v-model="outputItem" style="width:70%;">
-      <el-option
-        v-for="item in itemLis"
-        :key="item.id"
-        :label="item.itemName"
-        :value="item"
-      />
-    </el-select>
-
-    
-    
-   
-
-
-     <el-form-item label="Item Name">
-          {{outputItem.itemName}}
+        <el-form-item label="Name">
+          <el-input v-model="role.name" placeholder="Role Name" />
         </el-form-item>
-        <el-form-item label=" Item Price">
-            {{outputItem.price}}
+        <el-form-item label="contactNumber">
+          <el-input v-model="role.contactNumber" placeholder="Role Name" />
         </el-form-item>
-        <el-form-item label="Item Qty">
-          {{outputItem.quantity}}
+        <el-form-item label="driverStatus">
+          <el-input v-model="role.driverStatus" placeholder="Role Name" />
         </el-form-item>
-    <!--  </div>  -->
+        <el-form-item label="idNumber">
+          <el-input v-model="role.idNumber" placeholder="Role Name" />
+        </el-form-item>
 
-   <el-form-item label="Rquesting Qty">
-          <el-input v-model="qty" placeholder="Role Name" />
-        </el-form-item>
-       
+        <h3>Vehicle Details {{role.vehicle}} </h3>
 
-       
+        
+        <div v-if="role.vehicle">
+        <el-form-item label="vehicle Number">
+          <el-input v-model="role.vehicle.vehicleNumber" placeholder="Role Name" />
+        </el-form-item>
+        <el-form-item label="vehicle brand">
+          <el-input v-model="role.vehicle.brand" placeholder="Role Name" />
+        </el-form-item>
+        </div>
+
+         <div v-if="!role.vehicle">
+        <el-form-item label="vehicle Number">
+          <el-input v-model="role.vehicleNumber" placeholder="Role Name" />
+        </el-form-item>
+        <el-form-item label="vehicle brand">
+          <el-input v-model="role.brand" placeholder="Role Name" />
+        </el-form-item>
+        </div>
         
 <!-- 
         <el-form-item label="Desc">
@@ -107,7 +100,7 @@ asldhashda
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="dialogVisible=false">Cancel</el-button>
-        <el-button type="primary" @click="addItemtoCart()">add</el-button>
+        <el-button type="primary" @click="confirmRole">Confirm</el-button>
       </div>
     </el-dialog>
   </div>
@@ -116,7 +109,7 @@ asldhashda
 <script>
 import path from 'path'
 import { deepClone } from '@/utils'
-import { getRoutes, getRoles, addRole, deleteRole, placeholder,deleteDriver,updateDriver,addDriver,getItems, updateRole, getDrivers } from '@/api/role'
+import { getRoutes, getRoles, addRole, deleteRole,getAllOrderRetailShop, deleteDriver,updateDriver,addDriver, updateRole, getDrivers } from '@/api/role'
 
 const defaultRole = {
   key: '',
@@ -130,14 +123,9 @@ export default {
     return {
       role: Object.assign({}, defaultRole),
       routes: [],
-      totalPrice:0,
-      qty:"",
-      selectedItems:[],
-      outputItem:"",
       rolesList: [],
       driverList: [],
-      itemLis: [],
-      options: ['xlsx', 'csv', 'txt'],
+      allOrders:[],
       dialogVisible: false,
       dialogType: 'new',
       checkStrictly: false,
@@ -156,7 +144,7 @@ export default {
     // Mock: get all routes and roles list from server
     this.getRoutes()
     this.getRoles()
-    // this.getItems() 
+    this.getAllOrderRetailShop()
   },
   methods: {
     async getRoutes() {
@@ -165,71 +153,17 @@ export default {
       this.routes = this.generateRoutes(res.data)
     },
 
+    async getAllOrderRetailShop() {
+      var va=1
+      const res = await getAllOrderRetailShop(va)
+      console.log(res,"done")
+      this.allOrders=res;
 
-     async getItems() {
-      const res = await getItems()
-      console.log('Driver Details', res._embedded)
-      this.itemLis = res._embedded.warehouseItemList
-      console.log("Sample",this.itemLis)
-
+      // console.log('Driver Details', res._embedded.driverList)
+      // this.driverList = res._embedded.driverList
       // this.serviceRoutes = res.data
       // this.routes = this.generateRoutes(res.data)
     },
-    async placeTheOrder(){
-      // 
-
-      var itemLis=[]
-        for (let i = 0; i < this.selectedItems.length; i++) {
-               itemLis.push({itemId:this.selectedItems[i].ItemDetials.id,quantity:this.selectedItems[i].qty})
-        }
-      var resData ={retailId:1,  items:itemLis}
-      console.log(resData)
-      const res = await placeholder(resData)
-      console.log(res,"returned")
-
-      this.selectedItems=[]
-      this.totalPrice=[]
-
-        this.$notify({
-        title: 'Success',
-        dangerouslyUseHTMLString: true,
-        message: `
-            <div>Order Id : ${res.id}</div>
-            <div> retial Id: ${res.retailId}</div>
-            <div>Ordered Item list: ${res.itemList}</div>
-          `,
-        type: 'success'
-      })
-      
-
-    },
-    cancelTheOrder(){
-      
-      this.$confirm('Confirm to remove the driver?', 'Warning', {
-        confirmButtonText: 'Confirm',
-        cancelButtonText: 'Cancel',
-        type: 'warning'
-      })
-      .then(async() => {
-      this.selectedItems=[]
-      })
-    },
-
-    calculateTotalPrice(){
-// ItemDetials:this.outputItem,qty:this.qty
-
-  
-      let total=0;
-
-     for (let i = 0; i < this.selectedItems.length; i++) {
-               total+=this.selectedItems[i].ItemDetials.price * this.selectedItems[i].qty
-}
-  this.totalPrice=total
-
-
-    },
-
-    
 
     async getRoles() {
       const res = await getRoles()
@@ -278,7 +212,6 @@ export default {
       return data
     },
     handleAddRole() {
-      this.getItems()
       this.role = Object.assign({}, defaultRole)
       if (this.$refs.tree) {
         this.$refs.tree.setCheckedNodes([])
@@ -299,23 +232,22 @@ export default {
       })
     },
     handleDelete({ $index, row }) {
-      // this.$confirm('Confirm to remove the driver?', 'Warning', {
-      //   confirmButtonText: 'Confirm',
-      //   cancelButtonText: 'Cancel',
-      //   type: 'warning'
-      // })
-      this.selectedItems.splice($index, 1)
-        // .then(async() => {
-        //   await deleteDriver(row.id)
-        //   console.log("Id",row.id)
-        //   this.driverList.splice($index, 1)
-        //   console.log("Id","sucess")
-        //   this.$message({
-        //     type: 'success',
-        //     message: 'Delete succed!'
-        //   })
-        // })
-        // .catch(err => { console.error(err) })
+      this.$confirm('Confirm to remove the driver?', 'Warning', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      })
+        .then(async() => {
+          await deleteDriver(row.id)
+          console.log("Id",row.id)
+          this.driverList.splice($index, 1)
+          console.log("Id","sucess")
+          this.$message({
+            type: 'success',
+            message: 'Delete succed!'
+          })
+        })
+        .catch(err => { console.error(err) })
     },
     generateTree(routes, basePath = '/', checkedKeys) {
       const res = []
@@ -334,28 +266,6 @@ export default {
       }
       return res
     },
-     async addItemtoCart(){
-       if(this.outputItem.quantity<this.qty){
-
-         this.$notify({
-        title: 'Success',
-        dangerouslyUseHTMLString: true,
-        message: `
-            <div>Role Key: Quantity is exceeded</div>
-          `,
-        type: 'error'
-      })
-
-
-       }else{
-       this.selectedItems.push({ItemDetials:this.outputItem,qty:this.qty})
-       console.log("Fuck chandima")
-       this.calculateTotalPrice()
-       this.dialogVisible = false
-
-       }
-
-     },
     async confirmRole() {
       const isEdit = this.dialogType === 'edit'
 
