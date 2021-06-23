@@ -130,23 +130,32 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
-    path: '/permission',
+    path: '/delivery',
     component: Layout,
-    redirect: '/permission/page',
+    redirect: '/delivery/page',
     alwaysShow: true, // will always show the root menu
-    name: 'Permission',
+    name: 'Delivery',
     meta: {
-      title: 'Permission',
+      title: 'Delivery',
       icon: 'lock',
       roles: ['admin', 'editor'] // you can set roles in root nav
     },
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page'),
-        name: 'PagePermission',
+        path: 'driver',
+        component: () => import('@/views/permission/role'),
+        name: 'driverDetails',
         meta: {
-          title: 'Page Permission',
+          title: 'Driver Details',
+          roles: ['admin']
+        }
+      },
+      {
+        path: 'pickupOrders',
+        component: () => import('@/views/permission/page'),
+        name: 'pickupOrders',
+        meta: {
+          title: 'pickup Orders',
           roles: ['admin'] // or you can only set roles in sub nav
         }
       },
@@ -159,15 +168,7 @@ export const asyncRoutes = [
           // if do not set roles, means: this page does not require permission
         }
       },
-      {
-        path: 'role',
-        component: () => import('@/views/permission/role'),
-        name: 'RolePermission',
-        meta: {
-          title: 'Role Permission',
-          roles: ['admin']
-        }
-      },
+      
       {
         path: 'RetailSOrders',
         component: () => import('@/views/permission/RetailSOrders'),
@@ -241,12 +242,12 @@ export const asyncRoutes = [
   tableRouter,
 
   {
-    path: '/example',
+    path: '/warehouse',
     component: Layout,
     redirect: '/example/list',
-    name: 'Example',
+    name: 'warehouse',
     meta: {
-      title: 'Example',
+      title: 'warehouse',
       icon: 'el-icon-s-help'
     },
     children: [
@@ -286,12 +287,12 @@ export const asyncRoutes = [
   },
 
   {
-    path: '/error',
+    path: '/retailShop',
     component: Layout,
     redirect: 'noRedirect',
-    name: 'ErrorPages',
+    name: 'retailShop',
     meta: {
-      title: 'Error Pages',
+      title: 'retail Shop',
       icon: '404'
     },
     children: [
