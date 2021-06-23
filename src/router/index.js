@@ -216,9 +216,27 @@ export const asyncRoutes = [
           title: 'Assign Orders',
           roles: ['admin']
         }
+      },
+      {
+        path: 'warehouseOrders',
+        component: () => import('@/views/permission/warehouseOrders'),
+        name: 'warehouseOrders',
+        meta: {
+          title: 'Warehouse Orders',
+          roles: ['admin']
+        }
+      },
+      {
+        path: 'warehouseItems',
+        component: () => import('@/views/permission/warehouseItems'),
+        name: 'warehouseItems',
+        meta: {
+          title: 'Warehouse Items',
+          roles: ['admin']
+        }
       }
 
-
+          
     ]
   },
 
