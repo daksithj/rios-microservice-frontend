@@ -46,7 +46,32 @@ export function getItems() {
     url: 'warehouse/items',
     method: 'get'
   })
-}
+}  
+
+export function getPendingOrders() {
+  return RequestWarehouse({
+    url: 'warehouse/pending-orders',
+    method: 'get'
+  })
+} 
+
+
+
+export function updateWhareHouseOrder(id, data) {
+  return RequestWarehouse({
+    url: `warehouse/orders/${id}`,
+    method: 'put',
+    data
+  })
+} 
+
+export function assignOrder(data) {
+  return RequestDelivery({
+    url: 'delivery/orders',
+    method: 'post',
+    data
+  })
+} 
 export function addRetailShopDetails(data) {
   console.log("sample",data)
   return RequestRetailShop({
