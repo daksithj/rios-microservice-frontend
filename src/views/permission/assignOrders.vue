@@ -1,26 +1,33 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" @click="handleAddRole">New Item</el-button>
 
     <el-table :data="pendingOrders" style="width: 100%;margin-top:30px;" border>
-      <el-table-column align="center" label="Item Name" width="220">
-        <template slot-scope="scope">
-          {{ scope.row.retailId }}  
-        </template>
-      </el-table-column>      
-      <el-table-column align="center" label="Item Name" width="220">
-        <template slot-scope="scope">
-        <tr v-for="ro in scope.row.itemList">
-      <td >{{ro.warehouseItem.itemName}}</td>
-      <td >{{ro.warehouseItem.price}}</td>
-    </tr>
         
+      <el-table-column align="center" label="Item Name" width="220">
+        <template slot-scope="scope">
+        
+<el-table :data="scope.row.itemList" style="width: 100%;margin-top:30px;" border>
+      <el-table-column align="center" label="Items" width="220">
+        <template slot-scope="scopes">
+          {{ scopes.row.warehouseItem.itemName }}  
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="Item Price" width="220">
+        <template slot-scope="scopes">
+          {{ scopes.row.warehouseItem.price }}  
+        </template>
+      </el-table-column>  
+      <el-table-column align="center" label="Order Amount" width="220">
+        <template slot-scope="scopes">
+          {{ scopes.row.orderedAmount }}  
+        </template>
+      </el-table-column>        
+    </el-table>
         </template>
       </el-table-column>    
       <el-table-column align="center" label="Operations">
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="assignOrder(scope)">assignOrder</el-button>
-          <el-button type="danger" size="small" @click="handleDelete(scope)">Delete</el-button>
         </template>
       </el-table-column>
     </el-table>
