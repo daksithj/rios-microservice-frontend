@@ -58,7 +58,7 @@ export function confrimOrder(id,data) {
 
 export function updateRetailShopDetails(id,data) {
   return RequestRetailShop({
-    url: `retailShop/shop/${id}`,
+    url: `retailShop/shops/${id}`,
     method: 'put',
     data
   })
@@ -66,7 +66,7 @@ export function updateRetailShopDetails(id,data) {
 
 export function deleteRetailShopDetails(id) {
   return RequestRetailShop({
-    url: `retailShop/shop/${id}`,
+    url: `retailShop/shops/${id}`,
     method: 'delete'
   })
 }

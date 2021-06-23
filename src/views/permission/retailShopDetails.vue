@@ -188,7 +188,8 @@ export default {
       })
         .then(async() => {
           await deleteRetailShopDetails(row.id)
-          console.log("Id",row.id)
+          // console.log("Id",row.id)
+          console.log("Id Erroooorrrrrrrrrr no")
           this.retailShopList.splice($index, 1)
           console.log("Id","sucess")
           this.$message({
