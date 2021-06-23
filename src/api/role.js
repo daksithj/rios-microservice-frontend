@@ -88,6 +88,21 @@ export function confrimOrder(id,data) {
   })
 }
 
+export function completeOrder(id,data) {
+  return RequestDelivery({
+    url: `delivery/completeDeliveryOrders/${id}`,
+    method: 'put',
+    data
+  })
+}
+export function cancelOrder(id,data) {
+  return RequestDelivery({
+    url: `delivery/cancelOrder/${id}`,
+    method: 'put',
+    data
+  })
+}
+
 export function updateRetailShopDetails(id,data) {
   return RequestRetailShop({
     url: `retailShop/shops/${id}`,

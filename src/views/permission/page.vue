@@ -2,14 +2,15 @@
   <div class="app-container">
 
 
-<h1>{{deliveryItemStatus }} </h1>
-<h1>{{itemID }} </h1>
 
   <el-button type="success" v-on:click="confrimOrder">
         confrim 
       </el-button>
-    
-    <el-button type="success" v-on:click="cancelOrder">
+    <el-button type="success" v-on:click="completeOrder">
+        complete order 
+      </el-button>
+
+    <el-button type="danger" v-on:click="cancelOrder">
         cancel 
       </el-button>
 <h1>Shop details</h1>
@@ -95,7 +96,7 @@
 <script>
 import path from 'path'
 import { deepClone } from '@/utils'
-import { getRoutes, getRoles, addRole, deleteRole, confrimOrder,getOrders,getDriverItems ,updateRole, getDrivers } from '@/api/role'
+import { getRoutes, getRoles, addRole, deleteRole, confrimOrder,completeOrder,cancelOrder,getOrders,getDriverItems ,updateRole, getDrivers } from '@/api/role'
 
 const defaultRole = {
   key: '',
@@ -141,10 +142,41 @@ export default {
 
     async confrimOrder(){
       const res = await confrimOrder(this.itemID,{id:3})
-    },
 
+        this.$notify({
+        title: 'Success',
+        dangerouslyUseHTMLString: true,
+        message: `
+            <div>Order PickUp : ${res.id}</div>
+          `,
+        type: 'success'
+      })
+    },
+     async completeOrder(){
+      const res = await completeOrder(this.itemID,{id:3})
+       this.retailShopItems = [],
+      this.warehouseOrderDetails = [],
+      this.$notify({
+        title: 'Success',
+        dangerouslyUseHTMLString: true,
+        message: `
+            <div>Completed Order : ${res.id}</div>
+          `,
+        type: 'success'
+      })
+    },
     async cancelOrder(){
-      console.log("this is the fucking button cancle click ")
+      const res = await cancelOrder(this.itemID,{id:3})
+       this.retailShopItems = [],
+      this.warehouseOrderDetails = [],
+      this.$notify({
+        title: 'Success',
+        dangerouslyUseHTMLString: true,
+        message: `
+            <div>Cancled Order : ${res.id}</div>
+          `,
+        type: 'success'
+      })
     },
 
     async getRoutes() {

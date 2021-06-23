@@ -3,21 +3,21 @@
 
     <el-table :data="pendingOrders" style="width: 100%;margin-top:30px;" border>
         
-      <el-table-column align="center" label="Item Name" width="220">
+      <el-table-column align="center" label="Item List" >
         <template slot-scope="scope">
         
 <el-table :data="scope.row.itemList" style="width: 100%;margin-top:30px;" border>
-      <el-table-column align="center" label="Items" width="220">
+      <el-table-column align="center" label="Items" >
         <template slot-scope="scopes">
           {{ scopes.row.warehouseItem.itemName }}  
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Item Price" width="220">
+      <el-table-column align="center" label="Item Price" >
         <template slot-scope="scopes">
           {{ scopes.row.warehouseItem.price }}  
         </template>
       </el-table-column>  
-      <el-table-column align="center" label="Order Amount" width="220">
+      <el-table-column align="center" label="Order Amount" >
         <template slot-scope="scopes">
           {{ scopes.row.orderedAmount }}  
         </template>
@@ -25,8 +25,8 @@
     </el-table>
         </template>
       </el-table-column>    
-      <el-table-column align="center" label="Operations">
-        <template slot-scope="scope">
+      <el-table-column align="center" label="Operations" width="220">
+        <template slot-scope="scope" >
           <el-button type="primary" size="small" @click="assignOrder(scope)">assignOrder</el-button>
         </template>
       </el-table-column>
@@ -129,6 +129,20 @@ export default {
         const res = await assignOrder(data)
         this.updateWhareHouseOrder(scope)
         console.log(' assgin orders in ware house',res)
+
+
+        this.pendingOrders=[]
+
+
+        this.$notify({
+        title: 'Success',
+        dangerouslyUseHTMLString: true,
+        message: `
+            <div>Assinged  order</div>
+ 
+          `,
+        type: 'success'
+      })
       },
       async updateWhareHouseOrder(scope){
         let i = 0;
@@ -146,7 +160,6 @@ export default {
         }
         const res = await updateWhareHouseOrder( scope.row.id, data)
         
-        console.log("what is this there can be anything ", res)
         },
 
       
