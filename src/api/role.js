@@ -34,6 +34,13 @@ export function getRetailShopDetails() {
   })
 }
 
+export function getAllOrderRetailShop(id) {
+  return RequestRetailShop({
+      url: `retailShop/orders/retailShop/${id}`,
+      method: 'get'
+  })
+}
+
 export function getItems() {
   return RequestWarehouse({
     url: 'warehouse/items',
@@ -64,6 +71,7 @@ export function updateRetailShopDetails(id,data) {
   })
 }
 
+
 export function deleteRetailShopDetails(id) {
   return RequestRetailShop({
     url: `retailShop/shop/${id}`,
@@ -82,6 +90,16 @@ export function addWarehouseItems(data) {
   console.log("sample",data)
   return RequestWarehouse({
     url: `warehouse/items/`,
+    method: 'post',
+    data
+  })
+}
+
+
+export function placeholder(data) {
+  console.log("sample",data)
+  return RequestRetailShop({
+    url: `retailShop/orders`,
     method: 'post',
     data
   })
