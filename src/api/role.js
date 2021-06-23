@@ -97,8 +97,15 @@ export function deleteRetailShopDetails(id) {
 }
 
 export function getWarehouseItems() {
+  return RequestWarehouse({
+      url: 'warehouse/items',
+      method: 'get'
+  })
+}
+
+export function getWarehouseItemsOrders() {
     return RequestWarehouse({
-        url: 'warehouse/items',
+        url: 'warehouse/orders',
         method: 'get'
     })
 }
