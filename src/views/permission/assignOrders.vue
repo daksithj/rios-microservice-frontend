@@ -131,7 +131,6 @@ export default {
         console.log(' assgin orders in ware house',res)
 
 
-        this.pendingOrders=[]
 
 
         this.$notify({

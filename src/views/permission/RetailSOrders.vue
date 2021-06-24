@@ -1,12 +1,6 @@
 <template>
   <div class="app-container">
-asldhashda
- {{totalPrice}}
-
-
-
-
-
+     
     <el-button type="primary" @click="handleAddRole">add new Item</el-button>
 
     <el-table :data="selectedItems" style="width: 100%;margin-top:30px;" border>
@@ -17,12 +11,12 @@ asldhashda
       </el-table-column>
       <el-table-column align="center" label="price" width="220">
         <template slot-scope="scope">
-          {{ scope.row.qty }}
+          {{ scope.row.price }}
         </template>
       </el-table-column>
       <el-table-column align="header-center" label="quntity">
         <template slot-scope="scope">
-          {{ scope.row.driverStatus }}
+          {{ scope.row.qty }}
         </template>
       </el-table-column>
     
